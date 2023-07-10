@@ -32,6 +32,8 @@ public class Enemy2 : MonoBehaviour
         enemyHP = GetComponent<EnemyHP>();
     }
 
+
+
     // Update is called once per frame
     void Update()
     {
@@ -84,8 +86,7 @@ public class Enemy2 : MonoBehaviour
         transform.LookAt(target.transform);
     }
 
-
-
+    #region 애니메이션 이벤트 함수를 통해 호출되는 함수들
     public void OnAttack_Hit()
     {
         anim.SetBool("bAttack", false);
@@ -129,22 +130,47 @@ public class Enemy2 : MonoBehaviour
         }
     }
 
-    internal void DamageProcess()
+    internal void OnReact_Finished()
     {
-        // 적 체력을 1 감소하고싶다.
-        enemyHP.HP -= 1;
+        // 리액션이 끝났으니 Move상태로 전이하고싶다.
+        state = State.Move;
+        anim.SetTrigger("Move");
+        agent.isStopped = false;
+    }
+    #endregion
+
+    internal void DamageProcess(int damage = 1)
+    {
+        // 만약 내상태가 죽음상태라면
+        if (state == State.Die)
+        {
+            // 바로 반환하고싶다.
+            return;
+        }
+        agent.isStopped = true;
+
+        // 적 체력을 damage만큼 감소하고싶다.
+        enemyHP.HP -= damage;
         // 만약 적 체력이 0이하라면
         if (enemyHP.HP <= 0)
         {
             state = State.Die;
-            agent.isStopped = true;
             // 파괴하고싶다.
             Destroy(gameObject, 5);
             anim.SetTrigger("Die");
-        }
-        else
-        {
 
+            //// 콜라이더 컴포넌트를 가져오고싶다.
+            //Collider col = GetComponent<Collider>();
+            //// 콜라이더를 끄고싶다.
+            //if (col)
+            //    col.enabled = false;
+        }
+        else // 체력이 남아있으면 리액션 하고싶다.
+        {
+            state = State.React;
+            anim.SetTrigger("React");
         }
     }
+
+
 }
