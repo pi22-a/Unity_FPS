@@ -6,8 +6,21 @@ using UnityEngine.AI;
 
 // 상태머신으로 제어하고싶다.
 // Agent를 이용해서 이동하고싶다.
+// 나를 생성한 SpawnManager 기억하고, 내가 죽을때 걔한테 알려주고싶다.
 public class Enemy2 : MonoBehaviour
 {
+    SpawnManager mySpawnManager;
+    public void Init(SpawnManager spawnMgr)
+    {
+        mySpawnManager = spawnMgr;
+    }
+
+
+    void OnDestroy()
+    {
+        mySpawnManager.나죽었어(this);
+    }
+
     EnemyHP enemyHP;
     public enum State
     {

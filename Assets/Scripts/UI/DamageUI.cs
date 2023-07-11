@@ -8,13 +8,23 @@ public class DamageUI : MonoBehaviour
 {
     public float lifeSpan = 0.8f;
     public float speed = 1;
+    public AnimationCurve ac;
+    // 태어날 때 내 위치를 기억하고싶다.
+    Vector3 origin;
     void Start()
     {
+        origin = transform.position;
         Destroy(gameObject, lifeSpan);
     }
 
+    float currenTime;
+    public float height = 1;
+
     void Update()
     {
-        transform.position += Vector3.up * speed * Time.deltaTime;
+        currenTime += Time.deltaTime / speed;
+        float value = ac.Evaluate(currenTime);
+
+        transform.position = origin + Vector3.up * height * value;
     }
 }
