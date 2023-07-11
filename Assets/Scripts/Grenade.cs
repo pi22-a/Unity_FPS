@@ -15,14 +15,17 @@ public class Grenade : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
         rb = GetComponent<Rigidbody>();
         rb.AddForce(transform.forward * speed, ForceMode.Impulse);
+
+        rb.AddTorque(Vector3.right * 50, ForceMode.Impulse);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     // 어딘가에 부딪히면 3초 후에 파괴되고싶다.
@@ -37,6 +40,7 @@ public class Grenade : MonoBehaviour
         isCollisionCheck = true;
 
         StartCoroutine(IEBoom());
+
     }
 
     IEnumerator IEBoom()

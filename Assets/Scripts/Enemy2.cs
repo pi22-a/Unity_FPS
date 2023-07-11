@@ -139,6 +139,8 @@ public class Enemy2 : MonoBehaviour
     }
     #endregion
 
+    // 데미지를 입으면 데미지 UI를 내위치 위쪽으로 1M 위에 배치하고싶다.
+    public GameObject damageUIFactory;
     internal void DamageProcess(int damage = 1)
     {
         // 만약 내상태가 죽음상태라면
@@ -147,6 +149,10 @@ public class Enemy2 : MonoBehaviour
             // 바로 반환하고싶다.
             return;
         }
+
+        GameObject ui = Instantiate(damageUIFactory);
+        ui.transform.position = transform.position + Vector3.up * 1.2f;
+
         agent.isStopped = true;
 
         // 적 체력을 damage만큼 감소하고싶다.

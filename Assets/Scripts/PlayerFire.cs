@@ -2,12 +2,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 // 사용자가 마우스 왼쪽 버튼을 누르면
 // 총알공장에서 총알을 만들고
 // 그 총알을 총구위치에 배치하고싶다.
+// 태어날 때 수류탄UI공장에서 수류탄UI를 만들어서 화면에 배치하고 싶다.
+// 쿨타임이 1일 때 수류탄을 던질 수 있다. 던지면 쿨타임이 0이되게하고싶다.
 public class PlayerFire : MonoBehaviour
 {
+    public GameObject grenadeUIFactory;
+    public ScrollRect scrollRectSkill;
+
     enum BImpactName
     {
         Floor,
@@ -18,6 +24,13 @@ public class PlayerFire : MonoBehaviour
     public Transform firePosition;
     // 총알자국공장
     public GameObject[] bImpactFactorys;
+    SkillItem item;
+    private void Awake()
+    {
+        GameObject ui = Instantiate(grenadeUIFactory);
+        item = ui.GetComponent<SkillItem>();
+        ui.transform.parent = scrollRectSkill.content;
+    }
 
 
     void Start()
@@ -77,9 +90,10 @@ public class PlayerFire : MonoBehaviour
 
     private void UpdageGrenade()
     {
-        // 만약 사용자가 G키를 누르면 폭탄을 던지고 싶다.
-        if (Input.GetKeyDown(KeyCode.G))
+        // 만약 스킬을 사용할 수 있다면 그리고 사용자가 G키를 누르면 폭탄을 던지고 싶다.
+        if (item.CanDoIt() && Input.GetKeyDown(KeyCode.G))
         {
+            item.DoIt();
             GameObject g = Instantiate(grenadeFactory);
             g.transform.position = firePosition.position;
             g.transform.forward = firePosition.forward;
